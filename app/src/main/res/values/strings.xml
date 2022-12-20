@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MyWatcher</string>
+    <string name="wearable_device_is_connected">Wearable device is connected</string>
+    <string name="tap_to_edit_message">Tap to edit message</string>
+    <string name="send_message_to_wearable">Send message to wearable</string>
+    <string name="wearable_message">Wearable message</string>
+    <string name="message">Message content</string>
+    <string name="message_log">Message log</string>
+    <string name="init">…</string>
+    <string name="check_for_connected_wearables">Check for connected wearables</string>
+    <string name="send_message_alt">Send Message to Wearable</string>
+</resources>
