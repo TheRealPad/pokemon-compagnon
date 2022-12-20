@@ -1,5 +1,4 @@
 # todo-list-wear-app
-
 ## Description
 
 Simple todo list on mobile app, wich can communicate with the wear app for update task list (mark done or delete, but cannot create one)
