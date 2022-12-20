@@ -1,4 +1,4 @@
-package com.bharathvishal.messagecommunicationusingwearabledatalayer
+package com.todolist.androidwearapp
 
 import org.junit.Test
 

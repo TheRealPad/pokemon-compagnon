@@ -1,28 +1,24 @@
-package com.mywatcher.wearappandroid.ui.end
+package com.todolist.wearappandroid
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
-import com.google.android.gms.tasks.Task
-import com.mywatcher.wearappandroid.databinding.ActivityEndBinding
+import com.todolist.wearappandroid.databinding.ActivityMainBinding
 import com.google.android.gms.wearable.*
-import com.mywatcher.wearappandroid.MainActivity
 import java.nio.charset.StandardCharsets
 
-class EndActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvider,
+class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvider,
     DataClient.OnDataChangedListener,
     MessageClient.OnMessageReceivedListener,
     CapabilityClient.OnCapabilityChangedListener {
     private var activityContext: Context? = null
-    // pour connecter les données avec le front
-    private lateinit var binding: ActivityEndBinding
+    private lateinit var binding: ActivityMainBinding
     private val TAG_MESSAGE_RECEIVED = "receive1"
     private val APP_OPEN_WEARABLE_PAYLOAD_PATH = "/APP_OPEN_WEARABLE_PAYLOAD"
     private var mobileDeviceConnected: Boolean = false
@@ -32,32 +28,10 @@ class EndActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvi
     private var mobileNodeUri: String? = null
     private lateinit var ambientController: AmbientModeSupport.AmbientController
 
-    private fun printLogSendDataSuccess(text: String) {
-        Log.d("send1", "Message sent successfully")
-        val sbTemp = StringBuilder()
-        sbTemp.append("\n")
-        sbTemp.append(text)
-        sbTemp.append(" (Sent to mobile)")
-        Log.d("receive1", " $sbTemp")
-    }
-
-    private fun printLogSendDataFail() {
-        Log.d("send1", "Message failed.")
-    }
-
-    private fun sendData(text: String): Task<Int> {
-        val nodeId: String = messageEvent?.sourceNodeId!!
-        val payload: ByteArray = text.toByteArray()
-        return Wearable.getMessageClient(activityContext!!)
-            .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
-    }
-
     private fun handleReceiveDataMain(data: String) {
         try {
-            if (data == "end") {
+            if (data == "start") {
                 printLogReceiveData(data)
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
             } else {
                 printLogReceiveData(data)
             }
@@ -68,28 +42,10 @@ class EndActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEndBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         activityContext = this
-        ambientController = AmbientModeSupport.attach(this)
-
-        binding.finishButton.setOnClickListener {
-            if (mobileDeviceConnected) {
-                val text: String = "stop"
-
-                val sendMessageTask = sendData(text)
-                sendMessageTask.addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        printLogSendDataSuccess(text)
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                    } else {
-                        printLogSendDataFail()
-                    }
-                }
-            }
-        }
     }
 
     override fun onDataChanged(p0: DataEventBuffer) {
@@ -125,6 +81,8 @@ class EndActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvi
 
                     mobileDeviceConnected = true
 
+                    binding.deviceconnectionStatusTv.visibility = View.VISIBLE
+                    binding.deviceconnectionStatusTv.text = "Mobile device is connected"
                 } else {
                     Log.d(TAG_MESSAGE_RECEIVED, "Message failed.")
                 }
@@ -150,7 +108,6 @@ class EndActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvi
     override fun onMessageReceived(p0: MessageEvent) {
         try {
             Log.d(TAG_MESSAGE_RECEIVED, "onMessageReceived event received")
-            // contient données envoyé
             val s1 = String(p0.data, StandardCharsets.UTF_8)
             val messageEventPath: String = p0.path
 
@@ -198,7 +155,6 @@ class EndActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProvi
         }
     }
 
-    // fonction quand montre en "veille"
     override fun getAmbientCallback(): AmbientCallback = MyAmbientCallback()
 
     private inner class MyAmbientCallback : AmbientCallback() {

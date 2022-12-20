@@ -1,4 +1,4 @@
-package com.mywatcher.wearappandroid
+package com.todolist.wearappandroid
 
 import android.app.Application
 import com.google.android.material.color.DynamicColors

@@ -1,9 +1,8 @@
-package com.mywatcher.wearappandroid.ui.alarm
+package com.todolist.wearappandroid
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -12,16 +11,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mywatcher.wearappandroid.databinding.ActivityAlarmBinding
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
-import com.mywatcher.wearappandroid.MainActivity
-import com.mywatcher.wearappandroid.ui.run.RunActivity
+import com.todolist.wearappandroid.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
+class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     DataClient.OnDataChangedListener,
     MessageClient.OnMessageReceivedListener,
     CapabilityClient.OnCapabilityChangedListener {
@@ -41,17 +38,16 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private var messageEvent: MessageEvent? = null
     private var wearableNodeUri: String? = null
 
-    private lateinit var binding: ActivityAlarmBinding
+    private lateinit var binding: ActivityMainBinding
 
     private var check_wearable_device: Boolean = false
-    private var check_wear_connect_late: Boolean = false
 
     lateinit var mainHandler: Handler
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAlarmBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
@@ -62,28 +58,24 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
 
         if (!check_wearable_device) {
             if (!wearableDeviceConnected) {
-                val tempAct: Activity = activityContext as AlarmActivity
+                val tempAct: Activity = activityContext as MainActivity
                 initialiseDevicePairing(tempAct)
             }
             check_wearable_device = true
         }
         binding.checkwearablesButton.setOnClickListener {
             if (!wearableDeviceConnected) {
-                val tempAct: Activity = activityContext as AlarmActivity
+                val tempAct: Activity = activityContext as MainActivity
                 initialiseDevicePairing(tempAct)
             }
         }
 
-        binding.stopButton.setOnClickListener {
+        binding.startButton.setOnClickListener {
             if (wearableDeviceConnected) {
                 val nodeId: String = messageEvent?.sourceNodeId!!
-                val text: String = "stop"
-                // Set the data of the message to be the bytes of the Uri.
+                val text: String = "start"
                 val payload: ByteArray = text.toByteArray()
 
-                // Send the rpc
-                // Instantiates clients without member variables, as clients are inexpensive to
-                // create. (They are cached and shared between GoogleApi instances.)
                 val sendMessageTask =
                     Wearable.getMessageClient(activityContext!!)
                         .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
@@ -94,22 +86,18 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                         val sbTemp = StringBuilder()
                         sbTemp.append("\nstart (Sent to Wearable)")
                         Log.d("receive1", " $sbTemp")
-                        val intent = Intent(this, RunActivity::class.java)
-                        startActivity(intent)
                     } else {
                         Log.d("send1", "Message failed.")
                     }
                 }
             }
         }
-
         mainHandler = Handler(Looper.getMainLooper())
     }
 
 
     @SuppressLint("SetTextI18n")
     private fun initialiseDevicePairing(tempAct: Activity) {
-        //Coroutine
         launch(Dispatchers.Default) {
             var getNodesResBool: BooleanArray? = null
 
@@ -120,10 +108,8 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                 e.printStackTrace()
             }
 
-            //UI Thread
             withContext(Dispatchers.Main) {
                 if (getNodesResBool!![0]) {
-                    //if message Acknowlegement Received
                     if (getNodesResBool[1]) {
                         Toast.makeText(
                             activityContext,
@@ -134,7 +120,7 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             "Wearable device paired and app is open."
                         binding.deviceconnectionStatusTv.visibility = View.VISIBLE
                         wearableDeviceConnected = true
-                        binding.stopButton.visibility = View.VISIBLE
+                        binding.startButton.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
                             activityContext,
@@ -145,7 +131,7 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             "Wearable device paired but app isn't open."
                         binding.deviceconnectionStatusTv.visibility = View.VISIBLE
                         wearableDeviceConnected = false
-                        binding.stopButton.visibility = View.GONE
+                        binding.startButton.visibility = View.GONE
                     }
                 } else {
                     Toast.makeText(
@@ -157,7 +143,7 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                         "Wearable device not paired and connected."
                     binding.deviceconnectionStatusTv.visibility = View.VISIBLE
                     wearableDeviceConnected = false
-                    binding.stopButton.visibility = View.GONE
+                    binding.startButton.visibility = View.GONE
                 }
             }
         }
@@ -167,12 +153,11 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private fun getNodes(context: Context): BooleanArray {
         val nodeResults = HashSet<String>()
         val resBool = BooleanArray(2)
-        resBool[0] = false //nodePresent
-        resBool[1] = false //wearableReturnAckReceived
+        resBool[0] = false
+        resBool[1] = false
         val nodeListTask =
             Wearable.getNodeClient(context).connectedNodes
         try {
-            // Block on a task and get the result synchronously (because this is on a background thread).
             val nodes =
                 Tasks.await(
                     nodeListTask
@@ -183,21 +168,14 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                 nodeResults.add(node.id)
                 try {
                     val nodeId = node.id
-                    // Set the data of the message to be the bytes of the Uri.
                     val payload: ByteArray = wearableAppCheckPayload.toByteArray()
-                    // Send the rpc
-                    // Instantiates clients without member variables, as clients are inexpensive to
-                    // create. (They are cached and shared between GoogleApi instances.)
                     val sendMessageTask =
                         Wearable.getMessageClient(context)
                             .sendMessage(nodeId, APP_OPEN_WEARABLE_PAYLOAD_PATH, payload)
                     try {
-                        // Block on a task and get the result synchronously (because this is on a background thread).
                         val result = Tasks.await(sendMessageTask)
                         Log.d(TAG_GET_NODES, "send message result : $result")
                         resBool[0] = true
-                        //Wait for 1000 ms/1 sec for the acknowledgement message
-                        //Wait 1
                         if (currentAckFromWearForAppOpenCheck != wearableAppCheckPayloadReturnACK) {
                             Thread.sleep(100)
                             Log.d(TAG_GET_NODES, "ACK thread sleep 1")
@@ -206,7 +184,6 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             resBool[1] = true
                             return resBool
                         }
-                        //Wait 2
                         if (currentAckFromWearForAppOpenCheck != wearableAppCheckPayloadReturnACK) {
                             Thread.sleep(150)
                             Log.d(TAG_GET_NODES, "ACK thread sleep 2")
@@ -215,7 +192,6 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             resBool[1] = true
                             return resBool
                         }
-                        //Wait 3
                         if (currentAckFromWearForAppOpenCheck != wearableAppCheckPayloadReturnACK) {
                             Thread.sleep(200)
                             Log.d(TAG_GET_NODES, "ACK thread sleep 3")
@@ -224,7 +200,6 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             resBool[1] = true
                             return resBool
                         }
-                        //Wait 4
                         if (currentAckFromWearForAppOpenCheck != wearableAppCheckPayloadReturnACK) {
                             Thread.sleep(250)
                             Log.d(TAG_GET_NODES, "ACK thread sleep 4")
@@ -233,7 +208,6 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             resBool[1] = true
                             return resBool
                         }
-                        //Wait 5
                         if (currentAckFromWearForAppOpenCheck != wearableAppCheckPayloadReturnACK) {
                             Thread.sleep(350)
                             Log.d(TAG_GET_NODES, "ACK thread sleep 5")
@@ -298,15 +272,13 @@ class AlarmActivity : AppCompatActivity(), CoroutineScope by MainScope(),
             } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
 
                 try {
-                    binding.stopButton.visibility = View.VISIBLE
+                    binding.startButton.visibility = View.VISIBLE
 
                     val sbTemp = StringBuilder()
                     sbTemp.append("\n")
                     sbTemp.append(s)
                     sbTemp.append(" - (Received from wearable)")
                     Log.d("receive1", " $sbTemp")
-                    val intent = Intent(this, RunActivity::class.java)
-                    startActivity(intent)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
