@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
+import com.google.android.gms.tasks.Task
 import com.todolist.wearappandroid.databinding.ActivityMainBinding
 import com.google.android.gms.wearable.*
 import java.nio.charset.StandardCharsets
@@ -27,6 +28,13 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     private var messageEvent: MessageEvent? = null
     private var mobileNodeUri: String? = null
     private lateinit var ambientController: AmbientModeSupport.AmbientController
+
+    private fun sendData(text: String): Task<Int> {
+        val nodeId: String = messageEvent?.sourceNodeId!!
+        val payload: ByteArray = text.toByteArray()
+        return Wearable.getMessageClient(activityContext!!)
+            .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+    }
 
     private fun handleReceiveDataMain(data: String) {
         try {
