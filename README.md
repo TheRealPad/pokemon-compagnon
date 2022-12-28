@@ -1,7 +1,7 @@
-# todo-list-wear-app
+# pokemon-compagnon
 ## Description
 
-Simple todo list on mobile app, wich can communicate with the wear app for update task list (mark done or delete, but cannot create one)
+Simple pikachu who loves to play with you
 
 ## run project
 
