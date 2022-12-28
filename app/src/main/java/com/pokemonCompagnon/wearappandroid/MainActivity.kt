@@ -18,6 +18,10 @@ import kotlinx.coroutines.*
 import java.nio.charset.StandardCharsets
 import java.util.*
 
+class Pad {
+    public var count: Int = 0
+}
+
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     DataClient.OnDataChangedListener,
     MessageClient.OnMessageReceivedListener,
@@ -26,25 +30,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private val wearableAppCheckPayload = "AppOpenWearable"
     private val wearableAppCheckPayloadReturnACK = "AppOpenWearableACK"
     private var wearableDeviceConnected: Boolean = false
-
     private var currentAckFromWearForAppOpenCheck: String? = null
     private val APP_OPEN_WEARABLE_PAYLOAD_PATH = "/APP_OPEN_WEARABLE_PAYLOAD"
-
     private val MESSAGE_ITEM_RECEIVED_PATH: String = "/message-item-received"
-
     private val TAG_GET_NODES: String = "getnodes1"
-    private val TAG_MESSAGE_RECEIVED: String = "receive1"
-
     private var messageEvent: MessageEvent? = null
     private var wearableNodeUri: String? = null
-
     private lateinit var binding: ActivityMainBinding
-
     private var check_wearable_device: Boolean = false
-
     private var count: Int = 0
-
     lateinit var mainHandler: Handler
+    private var test: Pad = Pad()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +68,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
             }
         }
 
-        binding.startButton.setOnClickListener {
+        binding.counterButton.setOnClickListener {
             if (wearableDeviceConnected) {
                 val nodeId: String = messageEvent?.sourceNodeId!!
-                ++count
-                val text: String = count.toString()
-                val payload: ByteArray = text.toByteArray()
+                ++test.count
+                val payload: ByteArray = test.toString().toByteArray()
 
                 val sendMessageTask =
                     Wearable.getMessageClient(activityContext!!)
@@ -85,19 +80,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
 
                 sendMessageTask.addOnCompleteListener {
                     if (it.isSuccessful) {
-                        Log.d("send1", "Message sent successfully")
-                        val sbTemp = StringBuilder()
-                        sbTemp.append("\nstart (Sent to Wearable)")
-                        Log.d("receive1", " $sbTemp")
+                        Log.d("mobile send", "Message sent successfully")
                     } else {
-                        Log.d("send1", "Message failed.")
+                        Log.d("mobile send", "Message failed.")
                     }
                 }
             }
         }
         mainHandler = Handler(Looper.getMainLooper())
     }
-
 
     @SuppressLint("SetTextI18n")
     private fun initialiseDevicePairing(tempAct: Activity) {
@@ -119,22 +110,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             "Wearable device paired and app is open. Tap the \"Send Message to Wearable\" button to send the message to your wearable device.",
                             Toast.LENGTH_LONG
                         ).show()
-                        binding.deviceconnectionStatusTv.text =
-                            "Wearable device paired and app is open."
-                        binding.deviceconnectionStatusTv.visibility = View.VISIBLE
                         wearableDeviceConnected = true
-                        binding.startButton.visibility = View.VISIBLE
+                        binding.counterButton.visibility = View.VISIBLE
+                        binding.dataReceive.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
                             activityContext,
                             "A wearable device is paired but the wearable app on your watch isn't open. Launch the wearable app and try again.",
                             Toast.LENGTH_LONG
                         ).show()
-                        binding.deviceconnectionStatusTv.text =
-                            "Wearable device paired but app isn't open."
-                        binding.deviceconnectionStatusTv.visibility = View.VISIBLE
                         wearableDeviceConnected = false
-                        binding.startButton.visibility = View.GONE
+                        binding.counterButton.visibility = View.GONE
                     }
                 } else {
                     Toast.makeText(
@@ -142,16 +128,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                         "No wearable device paired. Pair a wearable device to your phone using the Wear OS app and try again.",
                         Toast.LENGTH_LONG
                     ).show()
-                    binding.deviceconnectionStatusTv.text =
-                        "Wearable device not paired and connected."
-                    binding.deviceconnectionStatusTv.visibility = View.VISIBLE
                     wearableDeviceConnected = false
-                    binding.startButton.visibility = View.GONE
+                    binding.counterButton.visibility = View.GONE
                 }
             }
         }
     }
-
 
     private fun getNodes(context: Context): BooleanArray {
         val nodeResults = HashSet<String>()
@@ -231,7 +213,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                     Log.d(TAG_GET_NODES, "send message exception")
                     e1.printStackTrace()
                 }
-            } //end of for loop
+            }
         } catch (exception: Exception) {
             Log.e(TAG_GET_NODES, "Task failed: $exception")
             exception.printStackTrace()
@@ -239,50 +221,25 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         return resBool
     }
 
-
     override fun onDataChanged(p0: DataEventBuffer) {
     }
 
     @SuppressLint("SetTextI18n")
     override fun onMessageReceived(p0: MessageEvent) {
         try {
-            val s =
-                String(p0.data, StandardCharsets.UTF_8)
+            val s = String(p0.data, StandardCharsets.UTF_8)
             val messageEventPath: String = p0.path
-            Log.d(
-                TAG_MESSAGE_RECEIVED,
-                "onMessageReceived() Received a message from watch:"
-                        + p0.requestId
-                        + " "
-                        + messageEventPath
-                        + " "
-                        + s
-            )
+            Log.d("receive from watch", " $s")
             if (messageEventPath == APP_OPEN_WEARABLE_PAYLOAD_PATH) {
                 currentAckFromWearForAppOpenCheck = s
-                Log.d(
-                    TAG_MESSAGE_RECEIVED,
-                    "Received acknowledgement message that app is open in wear"
-                )
-
-                val sbTemp = StringBuilder()
-                sbTemp.append("\nWearable device connected.")
-                Log.d("receive1", " $sbTemp")
-
                 binding.checkwearablesButton.visibility = View.GONE
                 messageEvent = p0
                 wearableNodeUri = p0.sourceNodeId
             } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
-
                 try {
-                    binding.startButton.visibility = View.VISIBLE
-
-                    val sbTemp = StringBuilder()
-                    sbTemp.append("\n")
-                    sbTemp.append(s)
-                    sbTemp.append(" - (Received from wearable)")
-                    Log.d("receive1", " $sbTemp")
-                    binding.messagelogTextView.text = s
+                    binding.counterButton.visibility = View.VISIBLE
+                    binding.dataReceive.visibility = View.VISIBLE
+                    binding.dataReceive.text = s
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -296,7 +253,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     override fun onCapabilityChanged(p0: CapabilityInfo) {
     }
 
-
     override fun onPause() {
         super.onPause()
         try {
@@ -307,7 +263,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
             e.printStackTrace()
         }
     }
-
 
     override fun onResume() {
         super.onResume()
