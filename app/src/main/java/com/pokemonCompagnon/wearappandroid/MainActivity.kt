@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
 
     private var check_wearable_device: Boolean = false
 
+    private var count: Int = 0
+
     lateinit var mainHandler: Handler
 
     @SuppressLint("SetTextI18n")
@@ -73,7 +75,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         binding.startButton.setOnClickListener {
             if (wearableDeviceConnected) {
                 val nodeId: String = messageEvent?.sourceNodeId!!
-                val text: String = "start"
+                ++count
+                val text: String = count.toString()
                 val payload: ByteArray = text.toByteArray()
 
                 val sendMessageTask =
@@ -279,6 +282,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                     sbTemp.append(s)
                     sbTemp.append(" - (Received from wearable)")
                     Log.d("receive1", " $sbTemp")
+                    binding.messagelogTextView.text = s
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

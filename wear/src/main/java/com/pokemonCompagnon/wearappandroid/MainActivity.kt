@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     private var messageEvent: MessageEvent? = null
     private var mobileNodeUri: String? = null
     private lateinit var ambientController: AmbientModeSupport.AmbientController
+    private var count: Int = 0
 
     private fun sendData(text: String): Task<Int> {
         val nodeId: String = messageEvent?.sourceNodeId!!
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
 
     private fun handleReceiveDataMain(data: String) {
         try {
+            binding.messagelogTextView.text = data
             if (data == "start") {
                 printLogReceiveData(data)
             } else {
@@ -54,6 +57,39 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         val view = binding.root
         setContentView(view)
         activityContext = this
+
+        ambientController = AmbientModeSupport.attach(this)
+
+        binding.sendmessageButton.setOnClickListener {
+            if (mobileDeviceConnected) {
+                val nodeId: String = messageEvent?.sourceNodeId!!
+                ++count
+                val text: String = count.toString()
+                // Set the data of the message to be the bytes of the Uri.
+                val payload: ByteArray = text.toByteArray()
+
+                // Send the rpc
+                // Instantiates clients without member variables, as clients are inexpensive to
+                // create. (They are cached and shared between GoogleApi instances.)
+                val sendMessageTask =
+                    Wearable.getMessageClient(activityContext!!)
+                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+
+                binding.deviceconnectionStatusTv.visibility = View.GONE
+
+                sendMessageTask.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d("send1", "Message sent successfully")
+                        val sbTemp = StringBuilder()
+                        sbTemp.append("\n")
+                        sbTemp.append(" (Sent to mobile)")
+                        Log.d("receive1", " $sbTemp")
+                    } else {
+                        Log.d("send1", "Message failed.")
+                    }
+                    }
+            }
+        }
     }
 
     override fun onDataChanged(p0: DataEventBuffer) {

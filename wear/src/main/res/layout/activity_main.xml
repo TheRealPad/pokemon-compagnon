@@ -44,90 +44,42 @@
 
                 </LinearLayout>
 
-                </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginTop="160dp">
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="25dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <Button
+                        android:id="@+id/sendmessageButton"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@drawable/blue_line"
+                        android:background="?attr/selectableItemBackground"
                         android:gravity="center"
+                        android:maxLines="2"
+                        android:scrollbars="vertical"
+                        android:text="@string/send_message_to_phone"
+                        android:textColor="?TextInfoColor"
+                        android:textSize="10.5sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
                         tools:ignore="SmallSp" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@drawable/white_line"
-                        android:gravity="center"
-                        tools:ignore="SmallSp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/blue_line"
-                        android:gravity="center"
-                        tools:ignore="SmallSp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="20dp"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/moon_icon" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:layout_marginTop="30dp"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="130dp"
+                <TextView
+                    android:id="@+id/messagelogTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/owl_little" />
+                    android:scrollbars="vertical"
+                    android:text="nothing receive"
+                    android:textColor="@color/blue_a400"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 

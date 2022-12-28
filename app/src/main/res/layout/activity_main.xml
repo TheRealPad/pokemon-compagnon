@@ -80,6 +80,14 @@
                 android:visibility="gone"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/messagelogTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:text="nothing receive"
+                android:textSize="12sp" />
+
         </LinearLayout>
 
     </LinearLayout>
