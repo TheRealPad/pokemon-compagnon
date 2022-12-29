@@ -1,4 +1,4 @@
-package com.todolist.wearappandroid
+package com.pokemonCompagnon.wearappandroid
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
 import com.google.android.gms.tasks.Task
-import com.todolist.wearappandroid.databinding.ActivityMainBinding
+import com.pokemonCompagnon.wearappandroid.databinding.ActivityMainBinding
 import com.google.android.gms.wearable.*
 import java.nio.charset.StandardCharsets
 
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     private var messageEvent: MessageEvent? = null
     private var mobileNodeUri: String? = null
     private lateinit var ambientController: AmbientModeSupport.AmbientController
+    private var count: Int = 0
 
     private fun sendData(text: String): Task<Int> {
         val nodeId: String = messageEvent?.sourceNodeId!!
@@ -38,10 +39,11 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
 
     private fun handleReceiveDataMain(data: String) {
         try {
+            binding.counter.text = data
             if (data == "start") {
-                printLogReceiveData(data)
+                Log.d("wear receive", " $data")
             } else {
-                printLogReceiveData(data)
+                Log.d("wear receive", " $data")
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -54,6 +56,27 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         val view = binding.root
         setContentView(view)
         activityContext = this
+        ambientController = AmbientModeSupport.attach(this)
+
+        binding.countButton.setOnClickListener {
+            if (mobileDeviceConnected) {
+                val nodeId: String = messageEvent?.sourceNodeId!!
+                ++count
+                val text: String = count.toString()
+                val payload: ByteArray = text.toByteArray()
+                val sendMessageTask =
+                    Wearable.getMessageClient(activityContext!!)
+                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+                binding.deviceconnectionStatusTv.visibility = View.GONE
+                sendMessageTask.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d("wear send", "Message sent successfully")
+                    } else {
+                        Log.d("wear send", "Message failed.")
+                    }
+                }
+            }
+        }
     }
 
     override fun onDataChanged(p0: DataEventBuffer) {
@@ -75,22 +98,15 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
                 TAG_MESSAGE_RECEIVED,
                 "Acknowledgement message successfully with payload : $returnPayloadAck"
             )
-
             messageEvent = p0
             mobileNodeUri = p0.sourceNodeId
-
             sendMessageTask.addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.d(TAG_MESSAGE_RECEIVED, "Message sent successfully")
-
-                    val sbTemp = StringBuilder()
-                    sbTemp.append("\nMobile device connected.")
-                    Log.d("receive1", " $sbTemp")
-
                     mobileDeviceConnected = true
-
-                    binding.deviceconnectionStatusTv.visibility = View.VISIBLE
-                    binding.deviceconnectionStatusTv.text = "Mobile device is connected"
+                    binding.deviceconnectionStatusTv.visibility = View.GONE
+                    binding.counter.visibility = View.VISIBLE
+                    binding.countButton.visibility = View.VISIBLE
                 } else {
                     Log.d(TAG_MESSAGE_RECEIVED, "Message failed.")
                 }
@@ -104,30 +120,12 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         }
     }
 
-    private fun printLogReceiveData(data: String) {
-        val sbTemp = StringBuilder()
-        sbTemp.append("\n")
-        sbTemp.append(data)
-        sbTemp.append(" - (Received from mobile)")
-        Log.d("receive1", " $sbTemp")
-    }
-
     @SuppressLint("SetTextI18n")
     override fun onMessageReceived(p0: MessageEvent) {
         try {
             Log.d(TAG_MESSAGE_RECEIVED, "onMessageReceived event received")
             val s1 = String(p0.data, StandardCharsets.UTF_8)
             val messageEventPath: String = p0.path
-
-            Log.d(
-                TAG_MESSAGE_RECEIVED,
-                "onMessageReceived() A message from watch was received:"
-                        + p0.requestId
-                        + " "
-                        + messageEventPath
-                        + " "
-                        + s1
-            )
 
             if (messageEventPath.isNotEmpty() && messageEventPath == APP_OPEN_WEARABLE_PAYLOAD_PATH) {
                 firstHandleReceiveData(p0)

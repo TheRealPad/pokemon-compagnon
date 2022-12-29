@@ -6,7 +6,7 @@ android {
     compileSdkVersion 33
     buildToolsVersion "33.0.0"
     defaultConfig {
-        applicationId "com.todolist.wearappandroid"
+        applicationId "com.pokemonCompagnon.wearappandroid"
         minSdkVersion 23
         targetSdkVersion 33
         versionCode 78
@@ -39,7 +39,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    namespace 'com.todolist.wearappandroid'
+    namespace 'com.pokemonCompagnon.wearappandroid'
 }
 
 dependencies {

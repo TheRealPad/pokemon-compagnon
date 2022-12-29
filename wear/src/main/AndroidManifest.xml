@@ -24,7 +24,7 @@
 
         <activity
             android:exported="true"
-            android:name="com.todolist.wearappandroid.MainActivity"
+            android:name="com.pokemonCompagnon.wearappandroid.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
