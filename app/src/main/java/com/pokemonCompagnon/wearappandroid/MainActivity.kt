@@ -18,10 +18,6 @@ import kotlinx.coroutines.*
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-class Pad {
-    public var count: Int = 0
-}
-
 class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     DataClient.OnDataChangedListener,
     MessageClient.OnMessageReceivedListener,
@@ -40,7 +36,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private var check_wearable_device: Boolean = false
     private var count: Int = 0
     lateinit var mainHandler: Handler
-    private var test: Pad = Pad()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +66,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         binding.counterButton.setOnClickListener {
             if (wearableDeviceConnected) {
                 val nodeId: String = messageEvent?.sourceNodeId!!
-                ++test.count
-                val payload: ByteArray = test.toString().toByteArray()
+                ++count
+                val payload: ByteArray = count.toString().toByteArray()
 
                 val sendMessageTask =
                     Wearable.getMessageClient(activityContext!!)
