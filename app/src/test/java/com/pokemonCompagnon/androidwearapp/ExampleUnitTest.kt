@@ -1,4 +1,4 @@
-package com.todolist.androidwearapp
+package com.pokemonCompagnon.androidwearapp
 
 import org.junit.Test
 

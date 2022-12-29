@@ -1,4 +1,4 @@
-package com.todolist.wearappandroid
+package com.pokemonCompagnon.wearappandroid
 
 import android.app.Application
 import com.google.android.material.color.DynamicColors

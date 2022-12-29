@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
-        applicationId "com.todolist.wearappandroid"
+        applicationId "com.pokemonCompagnon.wearappandroid"
         minSdkVersion 30
         targetSdkVersion 33
         versionCode 78
@@ -42,7 +42,7 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    namespace 'com.todolist.wearappandroid'
+    namespace 'com.pokemonCompagnon.wearappandroid'
 }
 
 dependencies {
