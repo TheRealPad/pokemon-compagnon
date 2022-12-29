@@ -1,4 +1,4 @@
-package com.todolist.wearappandroid
+package com.pokemonCompagnon.wearappandroid
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
 import com.google.android.gms.tasks.Task
-import com.todolist.wearappandroid.databinding.ActivityMainBinding
+import com.pokemonCompagnon.wearappandroid.databinding.ActivityMainBinding
 import com.google.android.gms.wearable.*
 import java.nio.charset.StandardCharsets
 
