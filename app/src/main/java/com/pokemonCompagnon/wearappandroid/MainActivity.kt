@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private var check_wearable_device: Boolean = false
     private var count: Int = 0
     lateinit var mainHandler: Handler
+    private var pikachu: Pokemon = Pokemon("Pikachu")
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
