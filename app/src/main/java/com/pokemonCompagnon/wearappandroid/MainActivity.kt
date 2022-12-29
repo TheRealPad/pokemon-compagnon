@@ -64,25 +64,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
             }
         }
 
-        binding.counterButton.setOnClickListener {
-            if (wearableDeviceConnected) {
-                val nodeId: String = messageEvent?.sourceNodeId!!
-                ++count
-                val payload: ByteArray = count.toString().toByteArray()
-
-                val sendMessageTask =
-                    Wearable.getMessageClient(activityContext!!)
-                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
-
-                sendMessageTask.addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Log.d("mobile send", "Message sent successfully")
-                    } else {
-                        Log.d("mobile send", "Message failed.")
-                    }
-                }
-            }
-        }
         mainHandler = Handler(Looper.getMainLooper())
     }
 
@@ -107,8 +88,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             Toast.LENGTH_LONG
                         ).show()
                         wearableDeviceConnected = true
-                        binding.counterButton.visibility = View.VISIBLE
-                        binding.dataReceive.visibility = View.VISIBLE
+                        //binding.counterButton.visibility = View.VISIBLE
+                        //binding.dataReceive.visibility = View.VISIBLE
+                        binding.compagnonData.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
                             activityContext,
@@ -116,7 +98,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             Toast.LENGTH_LONG
                         ).show()
                         wearableDeviceConnected = false
-                        binding.counterButton.visibility = View.GONE
+                        //binding.counterButton.visibility = View.GONE
+                        binding.compagnonData.visibility = View.GONE
                     }
                 } else {
                     Toast.makeText(
@@ -125,7 +108,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                         Toast.LENGTH_LONG
                     ).show()
                     wearableDeviceConnected = false
-                    binding.counterButton.visibility = View.GONE
+                    //binding.counterButton.visibility = View.GONE
+                    binding.compagnonData.visibility = View.GONE
                 }
             }
         }
@@ -233,9 +217,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                 wearableNodeUri = p0.sourceNodeId
             } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
                 try {
-                    binding.counterButton.visibility = View.VISIBLE
-                    binding.dataReceive.visibility = View.VISIBLE
-                    binding.dataReceive.text = s
+                    //binding.counterButton.visibility = View.VISIBLE
+                    //binding.dataReceive.visibility = View.VISIBLE
+                    //binding.dataReceive.text = s
+                    binding.compagnonData.visibility = View.VISIBLE
+                    // init data pikachu a display ici
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
