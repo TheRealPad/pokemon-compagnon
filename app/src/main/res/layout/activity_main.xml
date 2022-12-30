@@ -61,6 +61,27 @@
                 android:visibility="gone">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/pokemonName"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:inputType="text"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/cardview_light_background"
+                        android:autofillHints="salut toi" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/pokemonAsset"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -165,6 +186,27 @@
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/energy"
                             android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/sendDataWatch"
+                            android:background="@drawable/blue_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="update"
+                            android:textAllCaps="false"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
