@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         activityContext = this
         wearableDeviceConnected = false
         check_wearable_device = false
+        binding.pokemonName.setText(pikachu.getName())
 
 
         if (!check_wearable_device) {
@@ -65,6 +66,34 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         }
 
         mainHandler = Handler(Looper.getMainLooper())
+
+        binding.sendDataWatch.setOnClickListener {
+            if (wearableDeviceConnected) {
+                if (!binding.pokemonName.text!!.isNotEmpty()) {
+                    Toast.makeText(
+                        activityContext,
+                        "Message content is empty. Please enter some message and proceed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d("mobile send", "Message empty")
+                    return@setOnClickListener
+                }
+                val nodeId: String = messageEvent?.sourceNodeId!!
+                val payload: ByteArray = binding.pokemonName.text.toString().toByteArray()
+
+                val sendMessageTask =
+                    Wearable.getMessageClient(activityContext!!)
+                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+
+                sendMessageTask.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d("mobile send", "Message sent successfully")
+                    } else {
+                        Log.d("mobile send", "Message failed.")
+                    }
+                }
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
