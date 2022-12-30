@@ -49,6 +49,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         wearableDeviceConnected = false
         check_wearable_device = false
         binding.pokemonName.setText(pikachu.getName())
+        binding.happinessData.text = "happiness : " + pikachu.getHappiness().toString()
+        binding.foodData.text = "food : " + pikachu.getFood().toString()
+        binding.energyData.text = "energy : " + pikachu.getEnergy().toString()
 
 
         if (!check_wearable_device) {
