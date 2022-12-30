@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private var check_wearable_device: Boolean = false
     private var count: Int = 0
     lateinit var mainHandler: Handler
+    private var pikachu: Pokemon = Pokemon("Pikachu")
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         activityContext = this
         wearableDeviceConnected = false
         check_wearable_device = false
+        binding.pokemonName.setText(pikachu.getName())
+        binding.happinessData.text = "happiness : " + pikachu.getHappiness().toString()
+        binding.foodData.text = "food : " + pikachu.getFood().toString()
+        binding.energyData.text = "energy : " + pikachu.getEnergy().toString()
 
 
         if (!check_wearable_device) {
@@ -63,11 +68,21 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
             }
         }
 
-        binding.counterButton.setOnClickListener {
+        mainHandler = Handler(Looper.getMainLooper())
+
+        binding.sendDataWatch.setOnClickListener {
             if (wearableDeviceConnected) {
+                if (!binding.pokemonName.text!!.isNotEmpty()) {
+                    Toast.makeText(
+                        activityContext,
+                        "Message content is empty. Please enter some message and proceed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d("mobile send", "Message empty")
+                    return@setOnClickListener
+                }
                 val nodeId: String = messageEvent?.sourceNodeId!!
-                ++count
-                val payload: ByteArray = count.toString().toByteArray()
+                val payload: ByteArray = binding.pokemonName.text.toString().toByteArray()
 
                 val sendMessageTask =
                     Wearable.getMessageClient(activityContext!!)
@@ -82,7 +97,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                 }
             }
         }
-        mainHandler = Handler(Looper.getMainLooper())
     }
 
     @SuppressLint("SetTextI18n")
@@ -106,8 +120,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             Toast.LENGTH_LONG
                         ).show()
                         wearableDeviceConnected = true
-                        binding.counterButton.visibility = View.VISIBLE
-                        binding.dataReceive.visibility = View.VISIBLE
+                        //binding.counterButton.visibility = View.VISIBLE
+                        //binding.dataReceive.visibility = View.VISIBLE
+                        binding.compagnonData.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
                             activityContext,
@@ -115,7 +130,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             Toast.LENGTH_LONG
                         ).show()
                         wearableDeviceConnected = false
-                        binding.counterButton.visibility = View.GONE
+                        //binding.counterButton.visibility = View.GONE
+                        binding.compagnonData.visibility = View.GONE
                     }
                 } else {
                     Toast.makeText(
@@ -124,7 +140,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                         Toast.LENGTH_LONG
                     ).show()
                     wearableDeviceConnected = false
-                    binding.counterButton.visibility = View.GONE
+                    //binding.counterButton.visibility = View.GONE
+                    binding.compagnonData.visibility = View.GONE
                 }
             }
         }
@@ -232,9 +249,11 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                 wearableNodeUri = p0.sourceNodeId
             } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
                 try {
-                    binding.counterButton.visibility = View.VISIBLE
-                    binding.dataReceive.visibility = View.VISIBLE
-                    binding.dataReceive.text = s
+                    //binding.counterButton.visibility = View.VISIBLE
+                    //binding.dataReceive.visibility = View.VISIBLE
+                    //binding.dataReceive.text = s
+                    binding.compagnonData.visibility = View.VISIBLE
+                    // init data pikachu a display ici
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

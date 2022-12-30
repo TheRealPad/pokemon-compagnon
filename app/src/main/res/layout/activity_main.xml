@@ -33,6 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
 
             <Button
@@ -49,33 +51,168 @@
                 android:textStyle="bold"
                 android:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/dataReceive"
+            <LinearLayout
+                android:id="@+id/compagnonData"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginTop="160dp"
-                android:text="nothing receive"
-                android:textSize="30sp"
-                android:textColor="#FFFFFF"
-                android:visibility="visible"/>
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            <Button
-                android:id="@+id/counterButton"
-                android:background="@drawable/blue_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:scrollbars="vertical"
-                android:text="counter"
-                android:textAllCaps="false"
-                android:textSize="30sp"
-                android:visibility="visible"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/pokemonName"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:inputType="text"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/cardview_light_background"
+                        android:autofillHints="salut toi" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pokemonAsset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pikachu"
+                        android:contentDescription="TODO" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pokemonData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/happinessData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="happiness : __"
+                            android:layout_marginRight="10dp"
+                            android:textColor="@color/md_theme_light_background"
+                            android:textSize="30sp" />
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/smiley"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/foodData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="food : __"
+                            android:layout_marginRight="10dp"
+                            android:textColor="@color/md_theme_light_background"
+                            android:textSize="30sp" />
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/pizza"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/energyData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="energy : __"
+                            android:layout_marginRight="10dp"
+                            android:textColor="@color/md_theme_light_background"
+                            android:textSize="30sp" />
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/energy"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/sendDataWatch"
+                            android:background="@drawable/blue_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="update"
+                            android:textAllCaps="false"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
