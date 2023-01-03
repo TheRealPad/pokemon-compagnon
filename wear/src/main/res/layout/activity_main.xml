@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#141F27"
-    android:padding="9dp"
     tools:deviceIds="wear">
 
     <FrameLayout
@@ -42,7 +41,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -57,6 +55,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:scrollbars="vertical"
+                        android:paddingTop="60dp"
                         android:text="@string/mobile_device_is_connected"
                         android:textColor="?TextViewHeaderColor"
                         android:textSize="15sp"
@@ -65,42 +64,122 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40dp"
-                    android:scrollbars="vertical"
-                    android:text="nothing receive"
-                    android:textColor="@color/blue_a400"
-                    android:textSize="30sp"
-                    android:visibility="gone"/>
-
                 <LinearLayout
+                    android:id="@+id/pokemonAction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="25dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <Button
-                        android:id="@+id/countButton"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/pokemonAsset"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@color/blue_a400"
-                        android:gravity="center"
-                        android:maxLines="2"
-                        android:scrollbars="vertical"
-                        android:text="@string/send_message_to_phone"
-                        android:textColor="?TextInfoColor"
-                        android:textSize="10.5sp"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        tools:ignore="SmallSp" />
+                        android:visibility="visible"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/pikachu"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:id="@+id/scrollviewTextMessageLog"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/counter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:scrollbars="vertical"
+                                android:text="Pikachu"
+                                android:textColor="@color/blue_a400"
+                                android:textSize="30sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:orientation="vertical">
+
+                                    <Button
+                                        android:id="@+id/playButton"
+                                        android:background="@drawable/blue_button"
+                                        android:layout_width="100dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:text="play"
+                                        android:textAllCaps="false"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:orientation="vertical">
+
+                                    <Button
+                                        android:id="@+id/eatButton"
+                                        android:background="@drawable/blue_button"
+                                        android:layout_width="100dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:text="eat"
+                                        android:textAllCaps="false"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:orientation="vertical">
+
+                                    <Button
+                                        android:id="@+id/sleepButton"
+                                        android:background="@drawable/blue_button"
+                                        android:layout_width="100dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:text="sleep"
+                                        android:textAllCaps="false"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </ScrollView>
 
                 </LinearLayout>
 
