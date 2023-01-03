@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private var wearableNodeUri: String? = null
     private lateinit var binding: ActivityMainBinding
     private var check_wearable_device: Boolean = false
-    private var count: Int = 0
     lateinit var mainHandler: Handler
     private var pikachu: Pokemon = Pokemon("Pikachu")
 
@@ -127,8 +126,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             Toast.LENGTH_LONG
                         ).show()
                         wearableDeviceConnected = true
-                        //binding.counterButton.visibility = View.VISIBLE
-                        //binding.dataReceive.visibility = View.VISIBLE
                         binding.compagnonData.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
@@ -137,7 +134,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                             Toast.LENGTH_LONG
                         ).show()
                         wearableDeviceConnected = false
-                        //binding.counterButton.visibility = View.GONE
                         binding.compagnonData.visibility = View.GONE
                     }
                 } else {
@@ -147,7 +143,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                         Toast.LENGTH_LONG
                     ).show()
                     wearableDeviceConnected = false
-                    //binding.counterButton.visibility = View.GONE
                     binding.compagnonData.visibility = View.GONE
                 }
             }
@@ -259,9 +254,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                 wearableNodeUri = p0.sourceNodeId
             } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
                 try {
-                    //binding.counterButton.visibility = View.VISIBLE
-                    //binding.dataReceive.visibility = View.VISIBLE
-                    //binding.dataReceive.text = s
                     val data = s.split(";")
                     if (data.size == 3) {
                         pikachu.setHappiness(data[0].toInt())
@@ -270,7 +262,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                     }
                     updateDataDisplay()
                     binding.compagnonData.visibility = View.VISIBLE
-                    // init data pikachu a display ici
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
