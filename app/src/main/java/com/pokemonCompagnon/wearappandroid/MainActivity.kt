@@ -38,8 +38,16 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     lateinit var mainHandler: Handler
     private var pikachu: Pokemon = Pokemon("Pikachu")
 
+    private fun updateDataDisplay()
+    {
+        binding.happinessData.text = "happiness : " + pikachu.getHappiness().toString()
+        binding.foodData.text = "food : " + pikachu.getFood().toString()
+        binding.energyData.text = "energy : " + pikachu.getEnergy().toString()
+    }
+
     @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -49,9 +57,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         wearableDeviceConnected = false
         check_wearable_device = false
         binding.pokemonName.setText(pikachu.getName())
-        binding.happinessData.text = "happiness : " + pikachu.getHappiness().toString()
-        binding.foodData.text = "food : " + pikachu.getFood().toString()
-        binding.energyData.text = "energy : " + pikachu.getEnergy().toString()
+        updateDataDisplay()
 
 
         if (!check_wearable_device) {
@@ -100,7 +106,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initialiseDevicePairing(tempAct: Activity) {
+    private fun initialiseDevicePairing(tempAct: Activity)
+    {
         launch(Dispatchers.Default) {
             var getNodesResBool: BooleanArray? = null
 
@@ -147,7 +154,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         }
     }
 
-    private fun getNodes(context: Context): BooleanArray {
+    private fun getNodes(context: Context): BooleanArray
+    {
         val nodeResults = HashSet<String>()
         val resBool = BooleanArray(2)
         resBool[0] = false
@@ -233,11 +241,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         return resBool
     }
 
-    override fun onDataChanged(p0: DataEventBuffer) {
+    override fun onDataChanged(p0: DataEventBuffer)
+    {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onMessageReceived(p0: MessageEvent) {
+    override fun onMessageReceived(p0: MessageEvent)
+    {
         try {
             val s = String(p0.data, StandardCharsets.UTF_8)
             val messageEventPath: String = p0.path
@@ -252,6 +262,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
                     //binding.counterButton.visibility = View.VISIBLE
                     //binding.dataReceive.visibility = View.VISIBLE
                     //binding.dataReceive.text = s
+                    val data = s.split(";")
+                    if (data.size == 3) {
+                        pikachu.setHappiness(data[0].toInt())
+                        pikachu.setFood(data[1].toInt())
+                        pikachu.setEnergy(data[2].toInt())
+                    }
+                    updateDataDisplay()
                     binding.compagnonData.visibility = View.VISIBLE
                     // init data pikachu a display ici
                 } catch (e: Exception) {
@@ -264,10 +281,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         }
     }
 
-    override fun onCapabilityChanged(p0: CapabilityInfo) {
+    override fun onCapabilityChanged(p0: CapabilityInfo)
+    {
     }
 
-    override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
         try {
             Wearable.getDataClient(activityContext!!).removeListener(this)
@@ -278,7 +297,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         }
     }
 
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
         try {
             Wearable.getDataClient(activityContext!!).addListener(this)

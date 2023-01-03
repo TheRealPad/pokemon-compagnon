@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     private var mobileNodeUri: String? = null
     private lateinit var ambientController: AmbientModeSupport.AmbientController
     private var count: Int = 0
+    private var pikachu: Pokemon = Pokemon("Pikachu")
 
     private fun sendData(text: String): Task<Int> {
         val nodeId: String = messageEvent?.sourceNodeId!!
@@ -60,9 +62,59 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
 
         binding.playButton.setOnClickListener {
             if (mobileDeviceConnected) {
+                if (pikachu.getEnergy() == 0 || pikachu.getFood() == 0) {
+                    Toast.makeText(
+                        activityContext,
+                        "No energy, need to sleep or eat !",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@setOnClickListener
+                }
                 val nodeId: String = messageEvent?.sourceNodeId!!
-                ++count
-                val text: String = count.toString()
+                pikachu.setHappiness(pikachu.getHappiness() + 1)
+                pikachu.setEnergy(pikachu.getEnergy() - 1)
+                pikachu.setFood(pikachu.getFood() - 1)
+                val text: String = pikachu.getHappiness().toString() + ";" + pikachu.getFood().toString() + ";" + pikachu.getEnergy().toString()
+                val payload: ByteArray = text.toByteArray()
+                val sendMessageTask =
+                    Wearable.getMessageClient(activityContext!!)
+                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+                binding.deviceconnectionStatusTv.visibility = View.GONE
+                sendMessageTask.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d("wear send", "Message sent successfully")
+                    } else {
+                        Log.d("wear send", "Message failed.")
+                    }
+                }
+            }
+        }
+
+        binding.eatButton.setOnClickListener {
+            if (mobileDeviceConnected) {
+                val nodeId: String = messageEvent?.sourceNodeId!!
+                pikachu.setFood(pikachu.getFood() + 1)
+                val text: String = pikachu.getHappiness().toString() + ";" + pikachu.getFood().toString() + ";" + pikachu.getEnergy().toString()
+                val payload: ByteArray = text.toByteArray()
+                val sendMessageTask =
+                    Wearable.getMessageClient(activityContext!!)
+                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+                binding.deviceconnectionStatusTv.visibility = View.GONE
+                sendMessageTask.addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Log.d("wear send", "Message sent successfully")
+                    } else {
+                        Log.d("wear send", "Message failed.")
+                    }
+                }
+            }
+        }
+
+        binding.sleepButton.setOnClickListener {
+            if (mobileDeviceConnected) {
+                val nodeId: String = messageEvent?.sourceNodeId!!
+                pikachu.setEnergy(pikachu.getEnergy() + 1)
+                val text: String = pikachu.getHappiness().toString() + ";" + pikachu.getFood().toString() + ";" + pikachu.getEnergy().toString()
                 val payload: ByteArray = text.toByteArray()
                 val sendMessageTask =
                     Wearable.getMessageClient(activityContext!!)
