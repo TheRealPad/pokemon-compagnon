@@ -6,10 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.wear.ambient.AmbientModeSupport
 import androidx.wear.ambient.AmbientModeSupport.AmbientCallback
-import com.google.android.gms.tasks.Task
 import com.pokemonCompagnon.wearappandroid.databinding.ActivityMainBinding
 import com.google.android.gms.wearable.*
 import java.nio.charset.StandardCharsets
@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     CapabilityClient.OnCapabilityChangedListener {
     private var activityContext: Context? = null
     private lateinit var binding: ActivityMainBinding
-    private val TAG_MESSAGE_RECEIVED = "receive1"
+    private val TAG_MESSAGE_RECEIVED = "wear receive"
+    private val TAG_MESSAGE_SEND = "wear send"
     private val APP_OPEN_WEARABLE_PAYLOAD_PATH = "/APP_OPEN_WEARABLE_PAYLOAD"
     private var mobileDeviceConnected: Boolean = false
     private val wearableAppCheckPayloadReturnACK = "AppOpenWearableACK"
@@ -28,29 +29,38 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     private var messageEvent: MessageEvent? = null
     private var mobileNodeUri: String? = null
     private lateinit var ambientController: AmbientModeSupport.AmbientController
-    private var count: Int = 0
+    private var pikachu: Pokemon = Pokemon("Pikachu")
 
-    private fun sendData(text: String): Task<Int> {
+    private fun sendData()
+    {
         val nodeId: String = messageEvent?.sourceNodeId!!
+        val text: String = pikachu.getHappiness().toString() + ";" + pikachu.getFood().toString() + ";" + pikachu.getEnergy().toString()
         val payload: ByteArray = text.toByteArray()
-        return Wearable.getMessageClient(activityContext!!)
-            .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+        val sendMessageTask =
+            Wearable.getMessageClient(activityContext!!)
+                .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
+        binding.deviceConnectionStatusTv.visibility = View.GONE
+        sendMessageTask.addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d(TAG_MESSAGE_SEND, "Message sent successfully")
+            } else {
+                Log.d(TAG_MESSAGE_SEND, "Message failed.")
+            }
+        }
     }
 
-    private fun handleReceiveDataMain(data: String) {
+    private fun handleReceiveDataMain(data: String)
+    {
         try {
-            binding.counter.text = data
-            if (data == "start") {
-                Log.d("wear receive", " $data")
-            } else {
-                Log.d("wear receive", " $data")
-            }
+            binding.pokemonName.text = data
+            pikachu.setName(data)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -58,34 +68,48 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         activityContext = this
         ambientController = AmbientModeSupport.attach(this)
 
-        binding.countButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             if (mobileDeviceConnected) {
-                val nodeId: String = messageEvent?.sourceNodeId!!
-                ++count
-                val text: String = count.toString()
-                val payload: ByteArray = text.toByteArray()
-                val sendMessageTask =
-                    Wearable.getMessageClient(activityContext!!)
-                        .sendMessage(nodeId, MESSAGE_ITEM_RECEIVED_PATH, payload)
-                binding.deviceconnectionStatusTv.visibility = View.GONE
-                sendMessageTask.addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        Log.d("wear send", "Message sent successfully")
-                    } else {
-                        Log.d("wear send", "Message failed.")
-                    }
+                if (pikachu.getEnergy() == 0 || pikachu.getFood() == 0) {
+                    Toast.makeText(
+                        activityContext,
+                        "No energy, need to sleep or eat !",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    pikachu.setHappiness(pikachu.getHappiness() + 1)
+                    pikachu.setEnergy(pikachu.getEnergy() - 1)
+                    pikachu.setFood(pikachu.getFood() - 1)
+                    sendData()
                 }
+            }
+        }
+
+        binding.eatButton.setOnClickListener {
+            if (mobileDeviceConnected) {
+                pikachu.setFood(pikachu.getFood() + 1)
+                sendData()
+            }
+        }
+
+        binding.sleepButton.setOnClickListener {
+            if (mobileDeviceConnected) {
+                pikachu.setEnergy(pikachu.getEnergy() + 1)
+                sendData()
             }
         }
     }
 
-    override fun onDataChanged(p0: DataEventBuffer) {
+    override fun onDataChanged(p0: DataEventBuffer)
+    {
     }
 
-    override fun onCapabilityChanged(p0: CapabilityInfo) {
+    override fun onCapabilityChanged(p0: CapabilityInfo)
+    {
     }
 
-    private fun firstHandleReceiveData(p0: MessageEvent) {
+    private fun firstHandleReceiveData(p0: MessageEvent)
+    {
         try {
             val nodeId: String = p0.sourceNodeId.toString()
             val returnPayloadAck = wearableAppCheckPayloadReturnACK
@@ -104,9 +128,9 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
                 if (it.isSuccessful) {
                     Log.d(TAG_MESSAGE_RECEIVED, "Message sent successfully")
                     mobileDeviceConnected = true
-                    binding.deviceconnectionStatusTv.visibility = View.GONE
-                    binding.counter.visibility = View.VISIBLE
-                    binding.countButton.visibility = View.VISIBLE
+                    binding.deviceConnectionStatusTv.visibility = View.GONE
+                    binding.title.visibility = View.GONE
+                    binding.pokemonAction.visibility = View.VISIBLE
                 } else {
                     Log.d(TAG_MESSAGE_RECEIVED, "Message failed.")
                 }
@@ -121,7 +145,8 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onMessageReceived(p0: MessageEvent) {
+    override fun onMessageReceived(p0: MessageEvent)
+    {
         try {
             Log.d(TAG_MESSAGE_RECEIVED, "onMessageReceived event received")
             val s1 = String(p0.data, StandardCharsets.UTF_8)
@@ -138,7 +163,8 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         }
     }
 
-    override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
         try {
             Wearable.getDataClient(activityContext!!).removeListener(this)
@@ -149,7 +175,8 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         }
     }
 
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
         try {
             Wearable.getDataClient(activityContext!!).addListener(this)
@@ -163,16 +190,20 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
 
     override fun getAmbientCallback(): AmbientCallback = MyAmbientCallback()
 
-    private inner class MyAmbientCallback : AmbientCallback() {
-        override fun onEnterAmbient(ambientDetails: Bundle) {
+    private inner class MyAmbientCallback : AmbientCallback()
+    {
+        override fun onEnterAmbient(ambientDetails: Bundle)
+        {
             super.onEnterAmbient(ambientDetails)
         }
 
-        override fun onUpdateAmbient() {
+        override fun onUpdateAmbient()
+        {
             super.onUpdateAmbient()
         }
 
-        override fun onExitAmbient() {
+        override fun onExitAmbient()
+        {
             super.onExitAmbient()
         }
     }
