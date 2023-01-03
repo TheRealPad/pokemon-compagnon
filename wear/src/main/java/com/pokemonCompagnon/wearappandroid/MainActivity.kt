@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
         activityContext = this
         ambientController = AmbientModeSupport.attach(this)
 
-        binding.countButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             if (mobileDeviceConnected) {
                 val nodeId: String = messageEvent?.sourceNodeId!!
                 ++count
@@ -105,8 +105,10 @@ class MainActivity : AppCompatActivity(), AmbientModeSupport.AmbientCallbackProv
                     Log.d(TAG_MESSAGE_RECEIVED, "Message sent successfully")
                     mobileDeviceConnected = true
                     binding.deviceconnectionStatusTv.visibility = View.GONE
-                    binding.counter.visibility = View.VISIBLE
-                    binding.countButton.visibility = View.VISIBLE
+                    binding.title.visibility = View.GONE
+                    binding.pokemonAction.visibility = View.VISIBLE
+                    //binding.counter.visibility = View.VISIBLE
+                    //binding.countButton.visibility = View.VISIBLE
                 } else {
                     Log.d(TAG_MESSAGE_RECEIVED, "Message failed.")
                 }
