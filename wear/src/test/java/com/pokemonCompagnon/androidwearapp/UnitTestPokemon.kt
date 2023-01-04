@@ -43,5 +43,6 @@ class UnitTestPokemon {
         assertEquals(pikachu.getEnergy(), 0)
         assertEquals(pikachu.getFood(), 0)
         assertEquals(pikachu.getHappiness(), 0)
+        assertEquals(2, 1)
     }
 }

@@ -29,6 +29,7 @@ jobs:
         run: |
             ./gradlew test
             ./gradlew :app:testDebugUnitTest --tests "com.pokemonCompagnon.androidwearapp.UnitTestPokemon"
+            ./gradlew :wear:testDebugUnitTest --tests "com.pokemonCompagnon.androidwearapp.UnitTestPokemon"
 
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
