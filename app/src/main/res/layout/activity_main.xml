@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,25 +24,7 @@
                 android:scrollbars="vertical"
                 android:text="@string/app_name"
                 android:textColor="#00ACEE"
-                android:textSize="60sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/deviceconnectionStatusTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:scrollbars="vertical"
-                android:text="@string/wearable_device_is_connected"
-                android:textSize="15sp"
-                android:visibility="gone" />
+                android:textSize="40sp" />
 
         </LinearLayout>
 
@@ -51,34 +32,218 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/runningPikachu"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="150dp"
+                    android:paddingTop="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:rotation="5" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/checkwearablesButton"
                 android:background="@drawable/blue_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:scrollbars="vertical"
                 android:text="@string/check_for_connected_wearables"
                 android:textAllCaps="false"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="visible"/>
 
-            <Button
-                android:id="@+id/startButton"
-                android:background="@drawable/blue_button"
+            <LinearLayout
+                android:id="@+id/logoPokemon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:paddingTop="50dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/pokemon_logo"
+                    android:rotation="5" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/compagnonData"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:scrollbars="vertical"
-                android:text="start"
-                android:textAllCaps="false"
-                android:textSize="15sp"
-                android:visibility="gone"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/pokemonName"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:inputType="text"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/cardview_light_background" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pokemonAsset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/pikachu"
+                        android:contentDescription="TODO" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pokemonData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/happinessData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="happiness : __"
+                            android:layout_marginEnd="10dp"
+                            android:textColor="@color/md_theme_light_background"
+                            android:textSize="30sp" />
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/smiley"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/foodData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="food : __"
+                            android:layout_marginRight="10dp"
+                            android:textColor="@color/md_theme_light_background"
+                            android:textSize="30sp" />
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/pizza"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:visibility="visible"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/energyData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="energy : __"
+                            android:layout_marginRight="10dp"
+                            android:textColor="@color/md_theme_light_background"
+                            android:textSize="30sp" />
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/energy"
+                            android:contentDescription="TODO" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/sendDataWatch"
+                            android:background="@drawable/blue_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:scrollbars="vertical"
+                            android:text="update"
+                            android:textAllCaps="false"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

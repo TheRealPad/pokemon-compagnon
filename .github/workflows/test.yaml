@@ -1,0 +1,35 @@
+run-name: PokemonCompagnon CI
+
+on:
+  push:
+    branch:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: set up JDK 1.8
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Unit Test
+        run: |
+            ./gradlew test
+            ./gradlew :app:testDebugUnitTest --tests "com.pokemonCompagnon.androidwearapp.UnitTestPokemon"
+            ./gradlew :wear:testDebugUnitTest --tests "com.pokemonCompagnon.androidwearapp.UnitTestPokemon"
+
+      - name: Android Test Report
+        uses: asadmansr/android-test-report-action@v1.2.0
+        if: ${{ always() }}
