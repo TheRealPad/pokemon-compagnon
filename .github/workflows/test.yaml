@@ -4,11 +4,12 @@ on:
   push:
     branch:
       - master
-      - dev
+      - develop
+      - 11-automate
   pull_request:
     branches:
       - master
-      - dev
+      - develop
 
 jobs:
   unit-test:
