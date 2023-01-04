@@ -6,6 +6,8 @@
 
 Simple pikachu who loves to play with you
 
+You can give a nickname to your friend !
+
 ## run project
 
 Open the project on android studio.
