@@ -3,12 +3,14 @@ package com.pokemonCompagnon.wearappandroid
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Tasks
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
     private var check_wearable_device: Boolean = false
     lateinit var mainHandler: Handler
     private var pikachu: Pokemon = Pokemon("Pikachu")
+    private lateinit var rocketAnimation: AnimationDrawable
 
     private fun updateDataDisplay()
     {
@@ -57,6 +60,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
         check_wearable_device = false
         binding.pokemonName.setText(pikachu.getName())
         updateDataDisplay()
+        val rocketImage = findViewById<ImageView>(binding.runningPikachu.id).apply {
+            setBackgroundResource(R.drawable.running_pikachu)
+            rocketAnimation = background as AnimationDrawable
+        }
+        rocketAnimation.start()
+        rocketImage.setOnClickListener { rocketAnimation.start() }
 
 
         if (!check_wearable_device) {
@@ -250,6 +259,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope by MainScope(),
             if (messageEventPath == APP_OPEN_WEARABLE_PAYLOAD_PATH) {
                 currentAckFromWearForAppOpenCheck = s
                 binding.checkwearablesButton.visibility = View.GONE
+                binding.runningPikachu.visibility = View.GONE
+                binding.logoPokemon.visibility = View.GONE
                 messageEvent = p0
                 wearableNodeUri = p0.sourceNodeId
             } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
