@@ -5,7 +5,6 @@ on:
     branch:
       - master
       - develop
-      - 11-automate
   pull_request:
     branches:
       - master
