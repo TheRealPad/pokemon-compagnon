@@ -1,4 +1,7 @@
 # pokemon-compagnon
+
+![pokemon compagnon CI/CD](https://github.com/TheRealPad/pokemon-compagnon/actions/workflows/test.yaml/badge.svg)
+
 ## Description
 
 Simple pikachu who loves to play with you
